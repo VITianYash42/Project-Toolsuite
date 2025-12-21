@@ -1,56 +1,59 @@
-'use strict';
+let peer = null;
+let currentCall = null;
 
-let pc = new RTCPeerConnection({
-    iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
-});
-let isSender = false;
-
-async function init(sender) {
-    isSender = sender;
-    document.getElementById('step0').classList.add('hidden');
-    document.getElementById('step1').classList.remove('hidden');
-
-    if (isSender) {
-        document.getElementById('sender-ui').classList.remove('hidden');
-        try {
-            // Capture the screen
-            const stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
-            stream.getTracks().forEach(track => pc.addTrack(track, stream));
-            
-            const offer = await pc.createOffer();
-            await pc.setLocalDescription(offer);
-
-            // CRITICAL: Wait for ICE gathering to complete before showing QR
-            pc.onicecandidate = (event) => {
-                if (!event.candidate) {
-                    // Gathering finished! Now the LocalDescription is complete.
-                    console.log("ICE Gathering Complete. Generating QR...");
-                    generateQR(JSON.stringify(pc.localDescription), 'qr-canvas');
-                    startScanner('scanner-preview-alt');
-                    document.getElementById('sender-scan-ui').classList.remove('hidden');
-                }
-            };
-        } catch (err) {
-            alert("Error accessing screen: " + err.message);
-        }
-
-    } else {
-        document.getElementById('receiver-ui').classList.remove('hidden');
-        startScanner('scanner-preview');
-    }
-}
-
-function generateQR(data, canvasId) {
-    const canvas = document.getElementById(canvasId);
-    // Use Base64 to shrink the string slightly and make it QR-friendly
-    const encodedData = btoa(data);
+// 1. SHARING YOUR SCREEN
+async function startSharing() {
+    // Generate a simple 4-digit code
+    const shortId = Math.floor(1000 + Math.random() * 9000).toString();
     
-    new QRious({
-        element: canvas,
-        value: encodedData,
-        size: 300,
-        level: 'L' // Low error correction = less dense QR (easier to scan)
+    // Initialize Peer with that ID
+    // Note: PeerJS IDs must be unique, so we prefix it
+    peer = new Peer('toolsuite-' + shortId);
+
+    peer.on('open', (id) => {
+        document.getElementById('setup-zone').classList.add('hidden');
+        document.getElementById('display-zone').classList.remove('hidden');
+        document.getElementById('share-id-display').innerHTML = `SHARE THIS CODE: <strong>${shortId}</strong>`;
+        document.getElementById('status-text').innerText = "Waiting for receiver to connect...";
+    });
+
+    peer.on('call', async (call) => {
+        const stream = await navigator.mediaDevices.getDisplayMedia({ 
+            video: { cursor: "always" },
+            audio: false 
+        });
+        
+        call.answer(stream); // Send the screen stream to the caller
+        document.getElementById('status-text').innerText = "Streaming LIVE!";
+        
+        // Show local preview
+        document.getElementById('videoElement').srcObject = stream;
+    });
+
+    peer.on('error', (err) => {
+        alert("ID taken or connection error. Try again.");
+        location.reload();
     });
 }
 
-// ... (keep the startScanner and tick functions from the previous version)
+// 2. WATCHING A SCREEN
+function joinStream() {
+    const code = document.getElementById('joinCode').value.trim();
+    if (code.length < 4) return alert("Enter a valid code.");
+
+    peer = new Peer(); // Receiver gets a random ID
+
+    peer.on('open', (id) => {
+        document.getElementById('setup-zone').classList.add('hidden');
+        document.getElementById('display-zone').classList.remove('hidden');
+        document.getElementById('status-text').innerText = "Connecting to " + code + "...";
+
+        // We "call" the host. In our logic, the host answers with their screen.
+        const call = peer.call('toolsuite-' + code, null); 
+        
+        call.on('stream', (remoteStream) => {
+            document.getElementById('videoElement').srcObject = remoteStream;
+            document.getElementById('status-text').innerText = "Viewing Remote Screen";
+        });
+    });
+}
