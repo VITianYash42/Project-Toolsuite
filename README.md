@@ -14,7 +14,7 @@ Just your work and our tools.
 
 | Rank | Contributor | Points | Commits |
 |-----:|------------|-------:|--------:|
-| 1 | @Winter262005 | 75 | 75 |
+| 1 | @Winter262005 | 79 | 79 |
 | 2 | @Shlok-Dwivedi | 1 | 1 |
 | 3 | @SuyashSoni10 | 1 | 1 |
 
