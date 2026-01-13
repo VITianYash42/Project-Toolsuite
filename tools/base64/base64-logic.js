@@ -5,18 +5,46 @@ const output = document.getElementById('output');
 const encodeBtn = document.getElementById('encodeBtn');
 const decodeBtn = document.getElementById('decodeBtn');
 
+
+function encodeBase64(str) {
+    return btoa(
+        encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, (_, hex) =>
+            String.fromCharCode(parseInt(hex, 16))
+        )
+    );
+}
+
+function decodeBase64(str) {
+    return decodeURIComponent(
+        atob(str)
+            .split('')
+            .map(c => '%' + c.charCodeAt(0).toString(16).padStart(2, '0'))
+            .join('')
+    );
+}
+
+function updateButtonState() {
+    const hasInput = input.value.trim().length > 0;
+    encodeBtn.disabled = !hasInput;
+    decodeBtn.disabled = !hasInput;
+}
+
 encodeBtn.onclick = () => {
     try {
-        output.value = btoa(input.value);
-    } catch (e) {
-        alert("Unable to encode this text. Ensure it contains valid characters.");
+        output.value = encodeBase64(input.value);
+    } catch {
+        alert('Unable to encode this text.');
     }
 };
 
 decodeBtn.onclick = () => {
     try {
-        output.value = atob(input.value);
-    } catch (e) {
-        alert("Invalid Base64 string. Please check your input.");
+        output.value = decodeBase64(input.value.trim());
+    } catch {
+        alert('Invalid Base64 string.');
     }
 };
+
+input.addEventListener('input', updateButtonState);
+
+updateButtonState();
