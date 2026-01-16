@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toolsuite: Markdown Live Editor</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        /* Inheriting your global style from CONTRIBUTING.md */
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #ffffff;
+            color: #000000;
+            line-height: 1.6;
+            max-width: 1200px; /* Wider for split screen */
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        header { border-bottom: 5px solid #000; margin-bottom: 30px; }
+        h1 { font-size: 2rem; text-transform: uppercase; margin: 0; }
+        
+        /* Editor Layout */
+        .editor-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            height: 70vh; /* Occupy most of the screen */
+        }
+
+        /* Common box styling */
+        .box {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .label-bar {
+            background: #000;
+            color: #fff;
+            padding: 5px 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        textarea {
+            flex-grow: 1;
+            padding: 15px;
+            border: 2px solid #000;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1rem;
+            resize: none;
+            border-top: none; /* Merges with label bar */
+        }
+
+        textarea:focus { outline: none; background: #f9f9f9; }
+
+        #preview {
+            flex-grow: 1;
+            padding: 15px;
+            border: 2px solid #000;
+            border-top: none;
+            overflow-y: auto;
+            background: #fff;
+        }
+
+        /* Preview Internal Styling */
+        #preview h1, #preview h2 { border-bottom: 1px solid #000; }
+        #preview code { background: #eee; padding: 2px 4px; }
+        #preview pre { background: #eee; padding: 10px; overflow-x: auto; }
+        #preview blockquote { border-left: 4px solid #000; padding-left: 10px; margin-left: 0; }
+
+        /* Action Buttons */
+        .action-btn {
+            background: #fff;
+            color: #000;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.8rem;
+            text-decoration: underline;
+        }
+        .action-btn:hover { color: #ccc; }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .editor-container { grid-template-columns: 1fr; height: auto; }
+            textarea, #preview { height: 400px; }
+        }
+
+        footer { margin-top: 40px; border-top: 1px solid #000; padding-top: 20px; }
+        a { color: #000; text-decoration: none; border-bottom: 1px dotted #000; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Markdown Studio</h1>
+    <p>Live editor and previewer. Renders locally.</p>
+</header>
+
+<main class="editor-container">
+    <div class="box">
+        <div class="label-bar">
+            <span>Input (Markdown)</span>
+            <button id="clearBtn" class="action-btn">CLEAR</button>
+        </div>
+        <textarea id="markdownInput" placeholder="# Hello World&#10;&#10;Type your markdown here..."></textarea>
+    </div>
+
+    <div class="box">
+        <div class="label-bar">
+            <span>Live Preview</span>
+            <div>
+                <button id="copyHtmlBtn" class="action-btn">COPY HTML</button>
+                <button id="downloadBtn" class="action-btn">DOWNLOAD .MD</button>
+            </div>
+        </div>
+        <div id="preview"></div>
+    </div>
+</main>
+
+<footer>
+    <p><a href="../../index.html">← Back to Home</a></p>
+</footer>
+
+<script src="editor.js"></script>
+</body>
+</html>
