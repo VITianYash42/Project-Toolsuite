@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -95,6 +96,7 @@
 
         nav li {
             margin: 0;
+            border: 2px solid currentColor;
         }
 
         nav a {
@@ -164,6 +166,22 @@
             transition: background-color 0.25s, color 0.25s;
         }
 
+        .dark-mode .dark-mode-toggle {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: none;
+            border: 2px solid #f0f0f0;
+            padding: 8px 20px;
+            font-family: inherit;
+            font-size: 0.85rem;
+            color: #f0f0f0;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: background-color 0.25s, color 0.25s;
+        }
+
         .dark-mode-toggle:hover {
             background-color: #000;
             color: #fff;
@@ -192,135 +210,103 @@
                 position: static;
                 width: 100%;
                 margin-top: 18px;
-            } 
-        }
-
-        #toolSearch {
-            width: 100%;
-            padding: 14px;
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 1rem;
-            border: 2px solid currentColor;
-            background-color: transparent;
-            color: inherit;
-            box-sizing: border-box;
-            margin-bottom: 24px;
-            border-radius: 0;
-            outline: none;
-        }
-
-        #toolSearch::placeholder {
-            opacity: 0.6;
-            font-style: italic;
+            }
         }
     </style>
 </head>
+
 <body>
 
-<header>
-    <h1>Project Toolsuite</h1>
-    <p>
-        A collection of fast, minimal, privacy-first tools designed to get work done without friction.
-    </p>
-    <button class="dark-mode-toggle" id="darkModeToggle">Dark</button>
-</header>
-
-<main>
-    <section>
-        <h2>The Core Principle</h2>
+    <header>
+        <h1>Project Toolsuite</h1>
         <p>
-            Open your browser, complete your task, download the result. No friction. No distractions.
+            A collection of fast, minimal, privacy-first tools designed to get work done without friction.
         </p>
-        <p>
-            Built for moments when speed, simplicity, and reliability matter the most.
-        </p>
+        <button class="dark-mode-toggle" id="darkModeToggle">Dark</button>
+    </header>
 
-        <h3>Our Promise</h3>
-        <ul>
-            <li>No logins</li>
-            <li>No paywalls</li>
-            <li>No ads</li>
-            <li>Your work, our tools</li>
-        </ul>
-    </section>
+    <main>
+        <section>
+            <h2>The Core Principle</h2>
+            <p>
+                Open your browser, complete your task, download the result. No friction. No distractions.
+            </p>
+            <p>
+                Built for moments when speed, simplicity, and reliability matter the most.
+            </p>
 
-    <section id="tools">
-        <h2>Available Tools</h2>
-
-        <input type="text" id="toolSearch" placeholder="Type to search tools..." autocomplete="off">
-        <nav>
-            <ul id="toolList">
-                <li><a href="tools/pdf merger/pdf-merger.html">PDF ToolSuite</a></li>
-                <li><a href="tools/file converters/converter.html">File Converters</a></li>
-                <li><a href="tools/color palette extractor/palette.html">Image to Color Palette</a></li>
-                <li><a href="tools/qr generator/qr-generator.html">QR Generator</a></li>
-                <li><a href="tools/ocr/ocr.html">OCR Tool</a></li>
-                <li><a href="tools/url shortener/shortener.html">URL Shortener</a></li>
-                <li><a href="tools/screen mirror/mirror.html">Screen Mirror</a></li>
-                <li><a href="tools/password lab/password-tester.html">Password Strength Check</a></li>
-                <li><a href="tools/glass studio/glass-studio.html">Glass Studio</a></li>
-                <li><a href="tools/base64/base64.html">Base64 Encoder / Decoder</a></li>
-                <li><a href="tools/image compressor/image-compressor.html">Image Compressor</a></li>
-                <li><a href="tools/favicon generator/favicon-generator.html">Favicon Generator</a></li>
-                <li><a href="tools/markdown-editor/editor.html">Markdown Studio</a></li>
-                <li><a href="tools/json-formatter/json-formatter.html">JSON Formatter</a></li>
+            <h3>Our Promise</h3>
+            <ul>
+                <li>No logins</li>
+                <li>No paywalls</li>
+                <li>No ads</li>
+                <li>Your work, our tools</li>
             </ul>
-        </nav>
-    </section>
+        </section>
 
-    <section>
-        <h2>How It Works</h2>
+        <section id="tools">
+            <h2>Available Tools</h2>
+            <nav>
+                <ul>
+                    <li><a href="tools/pdf merger/pdf-merger.html">PDF ToolSuite</a></li>
+                    <li><a href="tools/file converters/converter.html">File Converters</a></li>
+                    <li><a href="tools/color palette extractor/palette.html">Image to Color Palette</a></li>
+                    <li><a href="tools/qr generator/qr-generator.html">QR Generator</a></li>
+                    <li><a href="tools/ocr/ocr.html">OCR Tool</a></li>
+                    <li><a href="tools/url shortener/shortener.html">URL Shortener</a></li>
+                    <li><a href="tools/screen mirror/mirror.html">Screen Mirror</a></li>
+                    <li><a href="tools/password lab/password-tester.html">Password Strength Check</a></li>
+                    <li><a href="tools/glass studio/glass-studio.html">Glass Studio</a></li>
+                    <li><a href="tools/base64/base64.html">Base64 Encoder / Decoder</a></li>
+                    <li><a href="tools/image compressor/image-compressor.html">Image Compressor</a></li>
+                    <li><a href="tools/favicon generator/favicon-generator.html">Favicon Generator</a></li>
+                    <li><a href="tools/markdown-editor/editor.html">Markdown Studio</a></li>
+                    <li><a href="tools/json-formatter/json-formatter.html">JSON Formatter</a></li>
+                </ul>
+            </nav>
+        </section>
+
+        <section>
+            <h2>How It Works</h2>
+            <p>
+                Processing happens directly in your browser whenever possible. Your files stay on your device, ensuring
+                privacy and faster results.
+            </p>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2025 Project Toolsuite — Simple. Fast. Free.</p>
         <p>
-            Processing happens directly in your browser whenever possible. Your files stay on your device, ensuring privacy and faster results.
+            <a href="https://github.com/Winter262005/Project-Toolsuite">About</a> |
+            <a href="privacy.html">Privacy Policy</a> |
+            <a href="contributers.html">Contributors</a>
         </p>
-    </section>
-</main>
+    </footer>
 
-<footer>
-    <p>© 2025 Project Toolsuite — Simple. Fast. Free.</p>
-    <p>
-        <a href="https://github.com/Winter262005/Project-Toolsuite">About</a> |
-        <a href="privacy.html">Privacy Policy</a> |
-        <a href="contributers.html">Contributors</a>
-    </p>
-</footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const toggle = document.getElementById('darkModeToggle');
+            const body = document.body;
+            const saved = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const toggle = document.getElementById('darkModeToggle');
-        const body = document.body;
-        const saved = localStorage.getItem('theme');
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+            if (saved === 'dark' || (!saved && prefersDark.matches)) {
+                body.classList.add('dark-mode');
+                toggle.textContent = 'Light';
+                toggle.style.color = '#f0f0f0';
+                toggle.style.backgroundColor = '#000';
+            }
 
-        if (saved === 'dark' || (!saved && prefersDark.matches)) {
-            body.classList.add('dark-mode');
-            toggle.textContent = 'Light';
-        }
-
-        toggle.addEventListener('click', function () {
-            body.classList.toggle('dark-mode');
-            const isDark = body.classList.contains('dark-mode');
-            toggle.textContent = isDark ? 'Light' : 'Dark';
-            localStorage.setItem('theme', isDark ? 'dark' : 'light');
-        });
-
-        const searchInput = document.getElementById('toolSearch');
-        const toolListItems = document.querySelectorAll('#tools nav li');
-
-        searchInput.addEventListener('input', function(e) {
-            const searchTerm = e.target.value.toLowerCase();
-
-            toolListItems.forEach(item => {
-                const linkText = item.textContent.toLowerCase();
-                if (linkText.includes(searchTerm)) {
-                    item.style.display = '';
-                } else {
-                    item.style.display = 'none';
-                }
+            toggle.addEventListener('click', function () {
+                body.classList.toggle('dark-mode');
+                const isDark = body.classList.contains('dark-mode');
+                toggle.textContent = isDark ? 'Light' : 'Dark';
+                localStorage.setItem('theme', isDark ? 'dark' : 'light');
             });
         });
-    });
-</script>
+    </script>
 
 </body>
+
 </html>
