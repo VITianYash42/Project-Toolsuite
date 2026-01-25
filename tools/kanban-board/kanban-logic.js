@@ -1,83 +1,83 @@
 'use strict';
 
-// 1. DATA STRUCTURE & STATE
-// Tasks are stored as an object where keys are list IDs
-let boardState = JSON.parse(localStorage.getItem('toolsuite_kanban')) || {
-    'todo-list': [],
-    'progress-list': [],
-    'done-list': []
+// 1. STATE INITIALIZATION
+// Using a versioned key to avoid conflicts with previous string-only data
+const STORAGE_KEY = 'toolsuite_kanban_v2';
+const lists = ['todo', 'progress', 'done'];
+
+let boardData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {
+    todo: [],
+    progress: [],
+    done: []
 };
 
-// 2. INITIALIZE DRAG & DROP
-const lists = ['todo-list', 'progress-list', 'done-list'];
-
+// 2. INITIAL RENDER & DRAG-DROP SETUP
 lists.forEach(listId => {
     const el = document.getElementById(listId);
     
-    // SortableJS initialization
+    // Render existing data
+    boardData[listId].forEach(item => {
+        el.appendChild(createCard(item.text, item.label));
+    });
+
+    // Initialize SortableJS
     new Sortable(el, {
-        group: 'shared', // Allows moving between lists
+        group: 'kanban_group',
         animation: 150,
         ghostClass: 'ghost-card',
-        onEnd: function() {
-            saveState(); // Sync data structure whenever a card is moved
-        }
+        onEnd: saveBoardState // Save on every reorder or move
     });
-
-    // Initial Render from LocalStorage
-    renderList(listId);
 });
 
-// 3. CORE LOGIC
-function renderList(listId) {
-    const container = document.getElementById(listId);
-    container.innerHTML = '';
-    
-    boardState[listId].forEach((taskText, index) => {
-        const card = createCardElement(taskText, listId);
-        container.appendChild(card);
-    });
-}
-
-function createCardElement(text, listId) {
+// 3. CORE UI LOGIC
+function createCard(text, label) {
     const card = document.createElement('div');
     card.className = 'task-card';
     card.innerHTML = `
-        <span>${text}</span>
-        <span class="delete-btn" onclick="deleteTask(this, '${listId}')">×</span>
+        <div class="label label-${label}">${label}</div>
+        <div class="task-text">${text}</div>
+        <span class="delete-btn" onclick="deleteTask(this)">×</span>
     `;
     return card;
 }
 
-window.addTask = function(listId) {
-    const text = prompt("Enter Task Description:");
-    if (!text || text.trim() === "") return;
+window.addNewTask = function(listId) {
+    const labelSelect = document.getElementById(`${listId}-label`);
+    const label = labelSelect.value;
+    const taskText = prompt("Enter task description:");
 
-    const container = document.getElementById(listId);
-    const card = createCardElement(text, listId);
-    container.appendChild(card);
-    
-    saveState();
-};
-
-window.deleteTask = function(btn, listId) {
-    if (confirm("Delete this task?")) {
-        btn.parentElement.remove();
-        saveState();
+    if (taskText && taskText.trim() !== "") {
+        const container = document.getElementById(listId);
+        container.appendChild(createCard(taskText, label));
+        saveBoardState();
+        
+        // Reset label selector
+        labelSelect.value = 'none';
     }
 };
 
-// 4. SYNC DOM STATE TO LOCALSTORAGE
-function saveState() {
+window.deleteTask = function(btn) {
+    if (confirm("Delete this task permanently?")) {
+        btn.parentElement.remove();
+        saveBoardState();
+    }
+};
+
+// 4. PERSISTENCE LOGIC
+function saveBoardState() {
     const newState = {};
     
     lists.forEach(listId => {
         const listEl = document.getElementById(listId);
-        const tasks = Array.from(listEl.querySelectorAll('.task-card span:first-child'))
-                           .map(span => span.innerText);
-        newState[listId] = tasks;
+        const cards = Array.from(listEl.querySelectorAll('.task-card'));
+        
+        newState[listId] = cards.map(card => {
+            return {
+                text: card.querySelector('.task-text').innerText,
+                label: card.querySelector('.label').innerText.toLowerCase()
+            };
+        });
     });
 
-    boardState = newState;
-    localStorage.setItem('toolsuite_kanban', JSON.stringify(boardState));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(newState));
 }
