@@ -8,6 +8,8 @@ const minifyBtn = document.getElementById('minifyBtn');
 const validateBtn = document.getElementById('validateBtn');
 const clearBtn = document.getElementById('clearBtn');
 const copyBtn = document.getElementById('copyBtn');
+const downloadBtn = document.getElementById('downloadBtn');
+
 
 function showStatus(message, isError = false) {
     statusDiv.textContent = message;
@@ -65,4 +67,28 @@ copyBtn.onclick = () => {
     setTimeout(() => copyBtn.textContent = originalText, 2000);
 };
 
+downloadBtn.onclick = () => {
+    if (!jsonOutput.value) {
+        showStatus("Nothing to download.", true);
+        return;
+    }
+
+    const blob = new Blob([jsonOutput.value], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = "data.json";
+    a.click();
+
+    URL.revokeObjectURL(url);
+    showStatus("JSON file downloaded.");
+};
+
+
 jsonInput.addEventListener('input', clearStatus);
+jsonInput.addEventListener('paste', () => {
+    setTimeout(() => {
+        processJSON('format');
+    }, 50);
+});
