@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visual CSS Clip-Path Generator</title>
+    <style>
+        :root {
+            --bg-color: #1e1e1e;
+            --panel-bg: #2d2d2d;
+            --text-color: #e0e0e0;
+            --accent-color: #007acc;
+            --handle-color: #ff4081;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar Controls */
+        .sidebar {
+            width: 300px;
+            background-color: var(--panel-bg);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            border-right: 1px solid #444;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.3);
+            z-index: 10;
+        }
+
+        h2 { margin-top: 0; font-size: 1.2rem; }
+
+        .code-box {
+            background: #111;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: monospace;
+            color: #9cdcfe;
+            border: 1px solid #444;
+            word-break: break-all;
+            position: relative;
+        }
+
+        .presets {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+        }
+
+        button {
+            padding: 8px;
+            background-color: #444;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        button:hover { background-color: var(--accent-color); }
+        button.active { background-color: var(--accent-color); }
+
+        .copy-btn {
+            margin-top: 10px;
+            width: 100%;
+            background-color: var(--accent-color);
+            font-weight: bold;
+            padding: 10px;
+        }
+
+        /* Main Canvas Area */
+        .workspace {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image: radial-gradient(#333 1px, transparent 1px);
+            background-size: 20px 20px;
+            position: relative;
+        }
+
+        .demo-box {
+            width: 400px;
+            height: 400px;
+            background: linear-gradient(135deg, #00c6ff, #0072ff);
+            position: relative;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            /* This is where the clip-path is applied */
+        }
+
+        /* Draggable Handles */
+        .handle {
+            width: 16px;
+            height: 16px;
+            background-color: var(--handle-color);
+            border: 2px solid white;
+            border-radius: 50%;
+            position: absolute;
+            transform: translate(-50%, -50%);
+            cursor: grab;
+            z-index: 20;
+            box-shadow: 0 0 5px rgba(0,0,0,0.5);
+        }
+        .handle:active { cursor: grabbing; transform: translate(-50%, -50%) scale(1.2); }
+
+        /* Custom Image Upload */
+        .upload-section {
+            border-top: 1px solid #444;
+            padding-top: 15px;
+        }
+        input[type="file"] { font-size: 0.8rem; }
+
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <h2>Clip-Path Generator</h2>
+        
+        <div>
+            <label>Presets:</label>
+            <div class="presets">
+                <button onclick="setShape('triangle')">Triangle</button>
+                <button onclick="setShape('trapezoid')">Trapezoid</button>
+                <button onclick="setShape('hexagon')">Hexagon</button>
+                <button onclick="setShape('circle')">Circle</button>
+                <button onclick="setShape('message')">Message</button>
+                <button onclick="setShape('cross')">Cross</button>
+            </div>
+        </div>
+
+        <div class="code-output">
+            <label>CSS Output:</label>
+            <div class="code-box" id="css-code">
+                clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+            </div>
+            <button class="copy-btn" id="btn-copy">Copy to Clipboard</button>
+        </div>
+
+        <div class="upload-section">
+            <label>Background Image:</label>
+            <input type="file" id="bg-upload" accept="image/*">
+            <p style="font-size: 0.8rem; color: #aaa;">Upload an image to test the clip-path on real content.</p>
+        </div>
+    </div>
+
+    <div class="workspace" id="workspace">
+        <div class="demo-box" id="target-element">
+            </div>
+    </div>
+
+    <script src="clip-logic.js"></script>
+</body>
+</html>
